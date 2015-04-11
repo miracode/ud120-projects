@@ -21,13 +21,15 @@ from email_preprocess import preprocess
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
 
+# 1, 4
+from sklearn import tree
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+t0 = time()
+clf.fit(features_train, labels_train)
+print "Fit time: %s" %round(time() - t0, 3)
 
+accuracy = clf.score(features_test, labels_test)
+print "Accuracy: %s" % round(accuracy, 3)
 
-
-#########################################################
-### your code goes here ###
-
-
-#########################################################
-
-
+# 2, 3
+print "No. of features %s" % len(features_train[0])
