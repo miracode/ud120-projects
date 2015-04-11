@@ -21,12 +21,46 @@ from email_preprocess import preprocess
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
 
+# features_train = features_train[:len(features_train)/100]
+# labels_train = labels_train[:len(labels_train)/100]
 
+from sklearn.svm import SVC
 
+clf = SVC(kernel="linear")
 
-#########################################################
-### your code goes here ###
+t0 = time()
+clf.fit(features_train, labels_train)
+print "Training time: %ss" % round(time() - t0, 3)
 
-#########################################################
+accuracy = clf.score(features_test, labels_test)
 
+print "Accuracy (linear): %s" % round(accuracy, 3)
 
+for c in [10, 100, 1000, 10000]:
+    print "c = %d" % c
+    clf = SVC(kernel="rbf", C=c)
+    t0 = time()
+    clf.fit(features_train, labels_train)
+    print "Training time: %ss" % round(time() - t0, 3)
+
+    accuracy = clf.score(features_test, labels_test)
+
+    print "Accuracy (rbf): %s" % round(accuracy, 3)
+
+clf = SVC(kernel="rbf", C=10000)
+t0 = time()
+clf.fit(features_train, labels_train)
+print "Training time: %ss" % round(time() - t0, 3)
+
+accuracy = clf.score(features_test, labels_test)
+
+print "Accuracy (rbf, c=10000): %s" % round(accuracy, 3)
+
+# for test_feature in [10, 26, 50]:
+#     print "Pred for elem %d (Sara=0, Chris=1): " % test_feature,\
+#         clf.predict(features_test[test_feature])
+
+pred = clf.predict(features_test)
+print "total:", len(pred)
+print "Chris:", sum(pred==1)
+print "Sara:", sum(pred==0)
